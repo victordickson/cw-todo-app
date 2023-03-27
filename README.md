@@ -23,5 +23,5 @@ Terraform and Ansible for infrastructure provisioning, configuration management 
 ![jenkins-pipeline](https://user-images.githubusercontent.com/68965446/227952951-e25dfc3a-e498-470e-87b9-76f6b2503971.PNG)
 
 
-![mysite](https://user-images.githubusercontent.com/68965446/227950521-ecbe0810-cc6a-4afd-8217-2121b9e06843.PNG)
+![reactsite](https://user-images.githubusercontent.com/68965446/227950521-ecbe0810-cc6a-4afd-8217-2121b9e06843.PNG)
 
