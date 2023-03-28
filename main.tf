@@ -74,7 +74,7 @@ resource "aws_instance" "managed_nodes" {
   ami = "ami-0f095f89ae15be883"
   count = 3
   instance_type = "t2.micro"
-  key_name = "keypair-name"
+  key_name = "demoKP"
   vpc_security_group_ids = [aws_security_group.tf-sec-gr.id]
   iam_instance_profile = aws_iam_instance_profile.ec2_instance_profile.name
   tags = {
