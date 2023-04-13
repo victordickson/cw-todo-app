@@ -47,7 +47,7 @@ pipeline {
                 }
                 sh 'echo ${DB_HOST}'
                 sh 'echo ${NODE_IP}'
-                sh 'envsubst < nodejs-env-template > ./nodejs/server/.env'
+                sh 'envsubst < node-env-template > ./nodejs/server/.env'
                 sh 'cat ./nodejs/server/.env'
                 sh 'envsubst < react-env-template > ./react/client/.env'
                 sh 'cat ./react/client/.env'
