@@ -47,9 +47,9 @@ resource "aws_instance" "managed_nodes" {
   vpc_security_group_ids = [aws_security_group.sg.id]
   iam_instance_profile = aws_iam_instance_profile.instance_profile.name
   tags = {
-    Name = "ansible_${element(var.names, count.index )}"
-    stack = "ansible_project"
-    environment = "development_1"
+    Name        = "${element(var.names, count.index)}"
+    stack       = var.prefix
+    environment = "development"
   }
 }
 
