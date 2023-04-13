@@ -1,5 +1,5 @@
 - name: Install Docker and config   # PLAY1
-  hosts: _development_1
+  hosts: _development
   become: true
   vars_files:
     - "playbook-vars.yml"
