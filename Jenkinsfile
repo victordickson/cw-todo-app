@@ -57,7 +57,7 @@ pipeline {
         stage('Build App Docker Images') {
             steps {
                 echo 'Building App Images'
-                sh 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:postgresql" -f ./postgresql/dockerfile-postgresql .'
+                sh 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:postgr" -f ./postgresql/dockerfile-postgresql .'
                 sh 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:nodejs" -f ./nodejs/dockerfile-nodejs .'
                 sh 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:react" -f ./react/dockerfile-react .'
                 sh 'docker image ls'
