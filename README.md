@@ -1,5 +1,6 @@
 # cw-todo-app
-![image](https://user-images.githubusercontent.com/68965446/215503794-3b430a2c-bdd1-4527-9dbc-3e2f4b03e3ac.png)
+![image](https://user-images.githubusercontent.com/68965446/231837454-681f20a8-9f05-47ae-bb5f-e52c67677d43.png)
+
 
 This project aims to create a Jenkins pipeline to deploy web-page written Nodejs and React Frameworks on AWS Cloud Infrastructure using Ansible.
 
