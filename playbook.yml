@@ -1,0 +1,147 @@
+- name: Install Docker and config   # PLAY1
+  hosts: _development
+  become: true
+  vars_files:
+    - "playbook-vars.yml"
+  tasks:
+    - name: Update all packages
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Remove Docker if installed from CentOS repo
+      yum:
+        name: "{{ item }}"
+        state: removed
+      with_items:
+        - docker
+        - docker-client
+        - docker-client-latest
+        - docker-common
+        - docker-latest
+        - docker-latest-logrotate
+        - docker-logrotate
+        - docker-engine
+
+    - name: Install yum utils
+      yum:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+        - unzip
+
+    - name: Add Docker repo
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+
+    - name: Install Docker
+      package:
+        name: docker-ce
+        state: latest
+
+    - name: Install pip
+      package:
+        name: python3-pip
+        state: present
+        update_cache: true
+
+    - name: Install Docker SDK
+      pip:
+        name: docker
+
+    - name: Add ec2-user to docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Download AWS CLI
+      get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /home/ec2-user/awscliv2.zip
+
+    - name: Unzip zip file
+      unarchive:
+        src: /home/ec2-user/awscliv2.zip
+        dest: /home/ec2-user
+        remote_src: True
+
+    - name: Install the AWS CLI
+      shell: ./aws/install
+
+    - name: Login to AWS ECR
+      shell: |
+        export PATH=/usr/local/bin:$PATH
+        source ~/.bash_profile
+        aws ecr get-login-password --region {{ aws_region }} | docker login --username AWS --password-stdin {{ ecr_registry }}
+
+- name: PostgreSQL database config   # PLAY2
+  hosts: _postgresql
+  become: true
+  vars_files:
+    - "playbook-vars.yml"
+  vars:
+    container_name: postgresql
+  tasks:
+    - name: Remove container and image if exist
+      shell: "docker ps -q --filter 'name={{ container_name }}' && docker stop {{ container_name }} && docker rm -fv {{ container_name }} && docker image rm -f {{ ecr_registry }}/{{ repo_name }}:{{ container_name }} || echo 'Not Found'"
+
+    - name: Launch PostgreSQL Docker container
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ ecr_registry }}/{{ repo_name }}:{{ container_name }}"
+        state: started
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_PASSWORD: "{{ postgres_password }}"
+        volumes:
+          - /db-data:/var/lib/postgresql/data
+
+- name: Nodejs server configuration   # PLAY3
+  hosts: _nodejs
+  become: true
+  vars_files:
+    - "playbook-vars.yml"
+  vars:
+    container_name: nodejs
+  tasks:
+    - name: Remove container and image if exist
+      shell: "docker ps -q --filter 'name={{ container_name }}' && docker stop {{ container_name }} && docker rm -fv {{ container_name }} && docker image rm -f {{ ecr_registry }}/{{ repo_name }}:{{ container_name }} || echo 'Not Found'"
+
+    - name: Launch Nodejs docker container
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ ecr_registry }}/{{ repo_name }}:{{ container_name }}"
+        state: started
+        ports:
+          - "5000:5000"
+
+- name: React UI Server configuration   # PLAY4
+  hosts: _react
+  become: true
+  vars_files:
+    - "playbook-vars.yml"
+  vars:
+    container_name: react
+  tasks:
+    - name: Remove container and image if exist
+      shell: "docker ps -q --filter 'name={{ container_name }}' && docker stop {{ container_name }} && docker rm -fv {{ container_name }} && docker image rm -f {{ ecr_registry }}/{{ repo_name }}:{{ container_name }} || echo 'Not Found'"
+
+    - name: Launch React docker container
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ ecr_registry }}/{{ repo_name }}:{{ container_name }}"
+        state: started
+        ports:
+          - "3000:3000"
