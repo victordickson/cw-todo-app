@@ -38,15 +38,15 @@ pipeline {
             }
         }
         
-                stage('Substitute Terraform Outputs into .env Files') {
+        stage('Substitute Terraform Outputs into .env Files') {
             steps {
                 echo 'Substituting Terraform Outputs into .env Files'
                 script {
-                    env.NODEJS_IP = sh(script: 'terraform output -raw nodejs_public_ip', returnStdout:true).trim()
-                    env.DB_HOST = sh(script: 'terraform output -raw postgresql_private_ip', returnStdout:true).trim()
+                    env.NODE_IP = sh(script: 'terraform output -raw node_public_ip', returnStdout:true).trim()
+                    env.DB_HOST = sh(script: 'terraform output -raw postgre_private_ip', returnStdout:true).trim()
                 }
                 sh 'echo ${DB_HOST}'
-                sh 'echo ${NODEJS_IP}'
+                sh 'echo ${NODE_IP}'
                 sh 'envsubst < nodejs-env-template > ./nodejs/server/.env'
                 sh 'cat ./nodejs/server/.env'
                 sh 'envsubst < react-env-template > ./react/client/.env'
