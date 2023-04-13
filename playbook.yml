@@ -1,14 +1,8 @@
 - name: Install Docker and config   # PLAY1
   hosts: _development
   become: true
-<<<<<<< HEAD:playbook.yml
   vars_files:
     - "playbook-vars.yml"
-=======
-  vars:
-    aws_region: us-east-1
-    ecr_registry: XXXXXXX.dkr.ecr.us-east-1.amazonaws.com
->>>>>>> dbeed3b7008899bfaaf6635f7ad0cc5ca75110e9:docker_project.yml
   tasks:
     - name: Update all packages
       yum:
@@ -54,13 +48,8 @@
         name: python3-pip
         state: present
         update_cache: true
-<<<<<<< HEAD:playbook.yml
 
     - name: Install Docker SDK
-=======
-        
-    - name: Install docker sdk
->>>>>>> dbeed3b7008899bfaaf6635f7ad0cc5ca75110e9:docker_project.yml
       pip:
         name: docker
 
@@ -102,13 +91,7 @@
   vars_files:
     - "playbook-vars.yml"
   vars:
-<<<<<<< HEAD:playbook.yml
     container_name: postgresql
-=======
-    postgre_container: /home/ec2-user/postgresql
-    container_name: techcrux_postgre
-    image_name: XXXXXXX.dkr.ecr.us-east-1.amazonaws.com/clarusway-repo/cw-todo-app:postgr
->>>>>>> dbeed3b7008899bfaaf6635f7ad0cc5ca75110e9:docker_project.yml
   tasks:
     - name: Remove container and image if exist
       shell: "docker ps -q --filter 'name={{ container_name }}' && docker stop {{ container_name }} && docker rm -fv {{ container_name }} && docker image rm -f {{ ecr_registry }}/{{ repo_name }}:{{ container_name }} || echo 'Not Found'"
@@ -131,13 +114,7 @@
   vars_files:
     - "playbook-vars.yml"
   vars:
-<<<<<<< HEAD:playbook.yml
     container_name: nodejs
-=======
-    container_path: /home/ec2-user/nodejs
-    container_name: techcrux_nodejs
-    image_name: XXXXXXX.dkr.ecr.us-east-1.amazonaws.com/clarusway-repo/cw-todo-app:nodejs
->>>>>>> dbeed3b7008899bfaaf6635f7ad0cc5ca75110e9:docker_project.yml
   tasks:
     - name: Remove container and image if exist
       shell: "docker ps -q --filter 'name={{ container_name }}' && docker stop {{ container_name }} && docker rm -fv {{ container_name }} && docker image rm -f {{ ecr_registry }}/{{ repo_name }}:{{ container_name }} || echo 'Not Found'"
@@ -156,13 +133,7 @@
   vars_files:
     - "playbook-vars.yml"
   vars:
-<<<<<<< HEAD:playbook.yml
     container_name: react
-=======
-    container_path: /home/ec2-user/react
-    container_name: techcrux_react
-    image_name: XXXXXXX.dkr.ecr.us-east-1.amazonaws.com/clarusway-repo/cw-todo-app:react
->>>>>>> dbeed3b7008899bfaaf6635f7ad0cc5ca75110e9:docker_project.yml
   tasks:
     - name: Remove container and image if exist
       shell: "docker ps -q --filter 'name={{ container_name }}' && docker stop {{ container_name }} && docker rm -fv {{ container_name }} && docker image rm -f {{ ecr_registry }}/{{ repo_name }}:{{ container_name }} || echo 'Not Found'"
