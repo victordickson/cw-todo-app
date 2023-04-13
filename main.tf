@@ -39,18 +39,17 @@ resource "aws_iam_instance_profile" "instance_profile" {
   name = "${var.prefix}-profile"
   role = aws_iam_role.aws_access.name
 }
-
-resource "aws_instance" "ec2_instance" {
-  count                  = 3
-  ami                    = "ami-0f095f89ae15be883"
-  instance_type          = "t2.micro"
-  key_name               = var.ssh_key_name
+resource "aws_instance" "managed_nodes" {
+  ami = "ami-0f095f89ae15be883"
+  count = 3
+  instance_type = "t2.micro"
+  key_name = var.ssh_key_name
   vpc_security_group_ids = [aws_security_group.sg.id]
-  iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
+  iam_instance_profile = aws_iam_instance_profile.instance_profile.name
   tags = {
-    Name        = "${element(var.names, count.index)}"
-    stack       = var.prefix
-    environment = "development"
+    Name = "ansible_${element(var.names, count.index )}"
+    stack = "ansible_project"
+    environment = "development_1"
   }
 }
 
