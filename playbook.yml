@@ -91,7 +91,7 @@
   vars_files:
     - "playbook-vars.yml"
   vars:
-    container_name: postgresql
+    container_name: postgr
   tasks:
     - name: Remove container and image if exist
       shell: "docker ps -q --filter 'name={{ container_name }}' && docker stop {{ container_name }} && docker rm -fv {{ container_name }} && docker image rm -f {{ ecr_registry }}/{{ repo_name }}:{{ container_name }} || echo 'Not Found'"
